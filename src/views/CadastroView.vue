@@ -22,7 +22,20 @@
 
                 <div>
                     <div class="text-start">Horários</div>
-                    <input type="text" name="horarios" class="form-control" id="hora_funci" v-model="dadosForm.horarios">
+                    <div class="d-flex gap-1"> 
+                        <input type="time" class="form-control" v-model="horaIni" id="hora_ini">
+                        <input type="time" class="form-control" v-model="horaFim" id="hora_fim">
+                        <div class="btn bg-primary text-white" title="Adicionar intervalo de tempo" v-on:click="addHora()">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>    
+                    </div>
+                    
+                    <div v-if="horarios_func.length > 0">
+                        <h5>Horários de funcionamento</h5>
+                        <template v-for="hora in horarios_func" :key="hora.id">        
+                            <div>{{ hora.horaIni }} - {{ hora.horaIni }}</div>                          
+                        </template>
+                    </div>
                 </div>
 
 
@@ -97,6 +110,10 @@
         name:'CadastroView',
         data() {
             return {
+                horaIni:null,
+                horaFim:null,
+                horarios_func:[],
+
                 dadosForm:{
                     nome:"",
                     horarios:"",
@@ -113,6 +130,23 @@
         },
 
         methods: {
+            addHora(){
+
+                if(this.horaIni && this.horaFim){
+                    this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})
+                    console.log(this.horarios_func)    
+                }
+                else{
+                    alert("Adicione um horário de início e outro de término")
+                }       
+            },
+
+
+
+
+
+
+            // Enviar formulário
             async enviarDados() {
                 alert("Enviando")
 
@@ -138,18 +172,18 @@
                     console.log(this.dadosForm)
 
                     // limpa formulário
-                    // this.dadosForm = {
-                    //     nome:"",
-                    //     horarios:"",
-                    //     dias_func:"",
-                    //     admin:"",
-                    //     senha:"",
-                    //     endereco:"",
-                    //     email:"",
-                    //     telefone:"",
-                    //     redeSocial:"",
-                    //     descricao:"",
-                    // };
+                    this.dadosForm = {
+                        nome:"",
+                        horarios:"",
+                        dias_func:"",
+                        admin:"",
+                        senha:"",
+                        endereco:"",
+                        email:"",
+                        telefone:"",
+                        redeSocial:"",
+                        descricao:"",
+                    };
                 } catch (error) {
                     console.error("Erro ao enviar:", error);
                 }
