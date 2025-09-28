@@ -7,43 +7,45 @@
 
         <form class="cadastro card p-3" @submit.prevent="enviarDados()">
             <!-- Informações do estabelecimento -->
-            <fieldset class="d-flex gap-3 flex-wrap align-items-center mb-3 P-2">
-                <legend class="text-start bg-light">INFORMAÇÕES DA EMPRESA</legend>               
-                <div>
-                    <div class="text-start">Logo da empresa</div>
-                    <input type="file" class="form-control" id="logo" placeholder="Opcional">
-                </div>
+            <fieldset class="d-flex flex-column gap-3 flex-wrap mb-3 P-2">
+                <legend class="text-start bg-light">INFORMAÇÕES DA EMPRESA</legend>
 
-                <div>
-                    <div class="text-start">Nome da empresa</div>
-                    <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome">
-                </div>
-
-
-                <div>
-                    <div class="text-start">Horários</div>
-                    <div class="d-flex gap-1"> 
-                        <input type="time" class="form-control" v-model="horaIni" id="hora_ini">
-                        <input type="time" class="form-control" v-model="horaFim" id="hora_fim">
-                        <div class="btn bg-primary text-white" title="Adicionar intervalo de tempo" v-on:click="addHora()">
-                            <i class="fa-solid fa-plus"></i>
-                        </div>    
+                <div class="d-flex flex-wrap gap-2">               
+                    <div class="inputsContainer w-100">
+                        <div class="text-start">Logo da empresa</div>
+                        <input type="file" class="form-control" id="logo" placeholder="Opcional">
                     </div>
-                    
-                    <div v-if="horarios_func.length > 0">
-                        <h5>Horários de funcionamento</h5>
-                        <template v-for="hora in horarios_func" :key="hora.id">        
-                            <div>{{ hora.horaIni }} - {{ hora.horaIni }}</div>                          
-                        </template>
+
+                    <div class="inputsContainer w-100">
+                        <div class="text-start">Nome da empresa</div>
+                        <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome">
+                    </div>
+
+
+                    <div style="max-width:250px; position:relative" class="d-flex flex-column">
+                        <div class="text-start">Horários (Início e término)</div>
+                        <div class="d-flex gap-1 flex"> 
+                            <input type="time" class="form-control" v-model="horaIni" id="hora_ini">
+                            <input type="time" class="form-control" v-model="horaFim" id="hora_fim">
+                            <div class="btn bg-primary text-white" title="Adicionar intervalo de tempo" v-on:click="addHora()">
+                                <i class="fa-solid fa-plus"></i>
+                            </div>    
+                        </div>
+                        
+                        <div v-if="horarios_func.length > 0" id="horariosContainer" class="bg-white shadow card">           
+                            <div  class="card-header fs-6">Horários de funcionamento</div>
+                            <template v-for="hora in horarios_func" :key="hora.id">        
+                                <div>{{ hora.horaIni }} - {{ hora.horaIni }}</div>                          
+                            </template>                           
+                        </div>
+                    </div>
+
+
+                    <div class="inputsContainer w-100">
+                        <div class="text-start">Dias de funcionamento</div>
+                        <input type="text" name="dias-funci" class="form-control" id="dias" v-model="dadosForm.dias_func">
                     </div>
                 </div>
-
-
-                <div>
-                    <div class="text-start">Dias de funcionamento</div>
-                    <input type="text" name="dias-funci" class="form-control" id="dias" v-model="dadosForm.dias_func">
-                </div>
-
 
                 <div>
                     <div class="text-start">Administrador(a)</div>
@@ -131,13 +133,16 @@
 
         methods: {
             addHora(){
-
                 if(this.horaIni && this.horaFim){
-                    this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})
-                    console.log(this.horarios_func)    
+                    if(this.horaIni < this.horaFim){
+                        this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})    
+                    }
+                    else{
+                        alert("O horário de início deve ser menor que o horário de término") 
+                    }               
                 }
                 else{
-                    alert("Adicione um horário de início e outro de término")
+                    alert("Adicione um horário de início e de término")
                 }       
             },
 
@@ -206,13 +211,21 @@
     }
 
     /* Estilo dos inputs */
-    input{
-        min-width: 300px;
-        width: 100%;
-        flex: 1;
+    .inputsContainer{
+        min-width: 100px;
+        flex: 1;    
+    }
+    input{     
+        width: 100%;    
     }
 
     fieldset > div{
         flex: 1;
+    }
+    #horariosContainer{
+        position: absolute;
+        height:300px;
+        top:70px;
+        overflow-y: scroll;
     }
 </style>
