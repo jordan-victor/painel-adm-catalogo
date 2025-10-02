@@ -5,24 +5,55 @@
             <h4>CADASTRO</h4>
         </header>
 
-        <form class="cadastro card p-3" @submit.prevent="enviarDados()">
+        <form class="cadastro" @submit.prevent="addDias(); enviarDados()">
             <!-- Informações do estabelecimento -->
-            <fieldset class="d-flex flex-column gap-3 flex-wrap mb-3 P-2">
-                <legend class="text-start bg-light">INFORMAÇÕES DA EMPRESA</legend>
-
-                <div class="d-flex flex-wrap gap-2">               
+            <div class="d-flex flex-column gap-3 flex-wrap">
+                <!-- Sobre a empresa -->
+                <fieldset class="d-flex flex-wrap flex-column gap-2 mb-2 p-2 border">
+                    <div class="text-start bg-light"><strong>Sobre o estabelecimento</strong></div>
+                    
                     <div class="inputsContainer w-100">
                         <div class="text-start">Logo da empresa</div>
                         <input type="file" class="form-control" id="logo" placeholder="Opcional">
                     </div>
 
                     <div class="inputsContainer w-100">
-                        <div class="text-start">Nome da empresa</div>
+                        <div class="text-start">Razão social</div>
                         <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome">
                     </div>
 
 
-                    <div style="max-width:250px; position:relative" class="d-flex flex-column">
+                     <div>
+                        <div class="text-start">Descrição</div>
+                        <input type="text" name="descricao" id="descricao" class="form-control" placeholder="Descreva a sua empresa" v-model="dadosForm.descricao">
+                    </div>
+
+
+                    <div class="inputsContainer w-100">
+                        <div class="text-start">CNPJ ou CPF</div>
+                        <select id="cnpj_cpf" class="form-select">
+                            <option value="">Selecionar</option>
+                            <option value="1">CPF</option>
+                            <option value="2">CNPJ</option>
+                        </select>
+                        <input type="hidden" class="form-control" id="cnpj_cpf" v-model="dadosForm.cnpj_cpf">
+                    </div>
+
+
+                    <div class="inputsContainer w-100">
+                        <div class="text-start">Administrador(a)</div>
+                        <input type="text" name="admins" class="form-control" id="adm" placeholder="Administrador do painel" v-model="dadosForm.admin">
+                    </div>
+                </fieldset>
+
+
+
+
+                <!-- Dias e horários -->
+                <fieldset class="d-flex flex-wrap flex-column gap-2 mb-2 p-2 border">
+                    <div class="text-start bg-light"><strong>Dias e horários</strong></div>
+
+                    <div style="position:relative" class="d-flex flex-column">
                         <div class="text-start">Horários (Início e término)</div>
                         <div class="d-flex gap-1 flex"> 
                             <input type="time" class="form-control" v-model="horaIni" id="hora_ini">
@@ -43,55 +74,89 @@
 
                     <div class="inputsContainer w-100">
                         <div class="text-start">Dias de funcionamento</div>
-                        <input type="text" name="dias-funci" class="form-control" id="dias" v-model="dadosForm.dias_func">
+                        <div style="position: relative;">
+                            <select id="dias" class="form-select">
+                                <option value="" style="display: none">Selecionar</option>
+                            </select>
+                            <input type="text" v-model="dias">
+
+                            <!-- Dias da semana -->
+                            <div class="shadow">
+                                <div class="bg-light"><strong>Dias da semana</strong></div>
+
+                                <div class="p-1">
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="segunda" value="segunda">
+                                        <label for="segunda">Segunda</label>
+                                    </div>
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="terca" value="terca">
+                                        <label for="terca">Terça</label>
+                                    </div>
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="quarta" value="quarta">
+                                        <label for="quarta">Quarta</label>
+                                    </div>
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="quinta" value="quinta">
+                                        <label for="quinta">Quinta</label>
+                                    </div>
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="sexta" value="sexta">
+                                        <label for="sexta">Sexta</label>
+                                    </div>
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="sabado" value="sabado">
+                                        <label for="sabado">Sábado</label>
+                                    </div>
+                                    <div class="d-flex flex-start gap-1">
+                                        <input type="checkbox" class="dia_semana" id="domingo" value="domingo">
+                                        <label for="domingo">Domingo</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <input type="hidden" name="dias-funci" class="form-control" id="dias" v-model="dadosForm.dias_func">
                     </div>
-                </div>
-
-                <div>
-                    <div class="text-start">Administrador(a)</div>
-                    <input type="text" name="admins" class="form-control" id="adm" placeholder="Administrador do painel" v-model="dadosForm.admin">
-                </div>
-
-                <div>
-                    <div class="text-start">Senha</div>
-                    <input type="password" name="senha" class="form-control" id="password" placeholder="Senha para acessar o painel" v-model="dadosForm.senha">
-                </div>
-
-
-                <div>
-                    <div class="text-start">Endereço</div>
-                    <input type="text" name="endereco" class="form-control" id="endereco" placeholder="Localização da empresa" v-model="dadosForm.endereco">
-                </div>
-
-
-                <div>
-                    <div class="text-start">Email</div>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Email(Opcional)" v-model="dadosForm.email">
-                </div>
-
-
-                <div>
-                    <div class="text-start">Telefone</div>
-                    <input type="number" name="telefones" class="form-control" id="telefone" placeholder="Número para contato" v-model="dadosForm.telefone">
-                </div>
-
-
-                <div>
-                    <div class="text-start">Redes sociais</div>
-                    <input type="text" name="redes_sociais" class="form-control" id="redes" placeholder="Opcional" v-model="dadosForm.redeSocial">
-                </div>
-
-
-                <div>
-                    <div class="text-start">Descrição</div>
-                    <input type="text" name="descricao" id="descricao" class="form-control" placeholder="Descreva a sua empresa" v-model="dadosForm.descricao">
-                </div>
-            </fieldset>
+                </fieldset>
 
 
 
 
-            <button class="btn bg-secondary text-white">Registrar</button>
+                <!-- Endereços e contatos -->
+                <fieldset class="d-flex flex-wrap flex-column gap-2 p-2 border mb-2">
+                    <div class="text-start bg-light"><strong>Endereço e contatos</strong></div>
+
+                    <div>
+                        <div class="text-start">Endereço</div>
+                        <input type="text" name="endereco" class="form-control" id="endereco" placeholder="Localização da empresa" v-model="dadosForm.endereco">
+                    </div>
+
+
+                    <div>
+                        <div class="text-start">Email</div>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Email(Opcional)" v-model="dadosForm.email">
+                    </div>
+
+
+                    <div>
+                        <div class="text-start">Telefone</div>
+                        <input type="number" name="telefones" class="form-control" id="telefone" placeholder="Número para contato" v-model="dadosForm.telefone">
+                    </div>
+
+                    <div>
+                        <div class="text-start">Redes sociais</div>
+                        <input type="text" name="redes_sociais" class="form-control" id="redes" placeholder="Opcional" v-model="dadosForm.redeSocial">
+                    </div>
+                </fieldset>           
+            </div>
+
+
+
+            <div class="d-flex flex-start">
+                <button class="btn bg-primary text-white">Registrar</button>    
+            </div>          
         </form>
     </main>
 </template>
@@ -112,16 +177,19 @@
         name:'CadastroView',
         data() {
             return {
+                //Horários
                 horaIni:null,
                 horaFim:null,
                 horarios_func:[],
+                //Dias
+                dias:null,
+                diasSubmit:[],
 
                 dadosForm:{
                     nome:"",
                     horarios:"",
                     dias_func:"",
                     admin:"",
-                    senha:"",
                     endereco:"",
                     email:"",
                     telefone:"",
@@ -132,10 +200,13 @@
         },
 
         methods: {
+            // Adicionar horas no array de horas
             addHora(){
                 if(this.horaIni && this.horaFim){
                     if(this.horaIni < this.horaFim){
-                        this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})    
+                        this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})
+                        this.horaIni = null
+                        this.horaFim = null    
                     }
                     else{
                         alert("O horário de início deve ser menor que o horário de término") 
@@ -147,7 +218,18 @@
             },
 
 
+            // Adicionar dias no array de dias
+            addDias(){
+                var diasSelecionados = document.querySelectorAll(".dia_semana")
+                diasSelecionados.forEach(dia_selecionado=>{
+                    if(dia_selecionado.checked){
+                        this.diasSubmit.push(dia_selecionado.value)
+                        this.dias = JSON.stringify(this.diasSubmit)
+                    }
+                })
 
+                this.diasSubmit = []
+            },
 
 
 
@@ -164,7 +246,6 @@
                     horarios: this.dadosForm.horarios,
                     dias_func: this.dadosForm.dias_func,
                     adm: this.dadosForm.admin,
-                    senha: this.dadosForm.senha,
                     endereco: this.dadosForm.endereco,
                     email: this.dadosForm.email,
                     telefone: this.dadosForm.telefone,
@@ -203,6 +284,15 @@
 
 
 <style scoped>
+    /* Estilo das fontes */
+    label{
+      color: rgb(59, 59, 59);
+    }
+    div{
+      color: rgb(59, 59, 59);  
+    }
+
+
     label{
         margin-left: 0px;
     }
@@ -215,13 +305,17 @@
         min-width: 100px;
         flex: 1;    
     }
-    input{     
+    input[type='text']{     
         width: 100%;    
     }
-
-    fieldset > div{
-        flex: 1;
+    input[type='number']{     
+        width: 100%;    
     }
+    select{
+        width: 100%;
+    }
+
+   
     #horariosContainer{
         position: absolute;
         height:300px;
