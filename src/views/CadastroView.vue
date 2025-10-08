@@ -1,8 +1,8 @@
 <template>
     <main class="container-lg">
-        <header class="d-flex justify-content-center align-items-center gap-1 mb-4">
+        <header class="d-flex justify-content-center align-items-center gap-1 mb-2">
             <img src="img/estabelecimento.png" alt="ícone loja" width="30px">
-            <h4>CADASTRO</h4>
+            <h4 class="mt-3">CADASTRO</h4>
         </header>
 
         <form class="cadastro" @submit.prevent="addDias(); enviarDados()">
@@ -31,12 +31,7 @@
 
                     <div class="inputsContainer w-100">
                         <div class="text-start">CNPJ ou CPF</div>
-                        <select id="cnpj_cpf" class="form-select">
-                            <option value="">Selecionar</option>
-                            <option value="1">CPF</option>
-                            <option value="2">CNPJ</option>
-                        </select>
-                        <input type="hidden" class="form-control" id="cnpj_cpf" v-model="dadosForm.cnpj_cpf">
+                        <input type="number" class="form-control" id="cnpj_cpf" v-model="dadosForm.cnpj_cpf">
                     </div>
 
 
@@ -56,17 +51,24 @@
                     <div style="position:relative" class="d-flex flex-column">
                         <div class="text-start">Horários (Início e término)</div>
                         <div class="d-flex gap-1 flex"> 
+                            <div class="d-flex flex-column justify-content-end" v-if="horarios_func.length > 0">
+                                <i class="fa-solid fa-caret-down fs-2" data-bs-toggle="collapse" data-bs-target="#horariosContainer"></i>
+                            </div>
                             <input type="time" class="form-control" v-model="horaIni" id="hora_ini">
-                            <input type="time" class="form-control" v-model="horaFim" id="hora_fim">
+                            <input type="time" class="form-control" v-model="horaFim" id="hora_fim">      
                             <div class="btn bg-primary text-white" title="Adicionar intervalo de tempo" v-on:click="addHora()">
                                 <i class="fa-solid fa-plus"></i>
                             </div>    
                         </div>
                         
-                        <div v-if="horarios_func.length > 0" id="horariosContainer" class="bg-white shadow card">           
-                            <div  class="card-header fs-6">Horários de funcionamento</div>
+                        <div v-if="horarios_func.length > 0" id="horariosContainer" class="bg-white shadow card collapse" style="z-index: 10; width: 200px;">
+                            <div class="d-flex justify-content-between card-header align-items-center gap-3">
+                                <div class="fs-6">Horários</div>
+                                <i class="fa-solid fa-xmark" data-bs-toggle="collapse" data-bs-target="#horariosContainer"></i>                               
+                            </div>           
+                            
                             <template v-for="hora in horarios_func" :key="hora.id">        
-                                <div>{{ hora.horaIni }} - {{ hora.horaIni }}</div>                          
+                                <div>{{ hora.horaIni }} - {{ hora.horaFim }}</div>                          
                             </template>                           
                         </div>
                     </div>
@@ -75,13 +77,14 @@
                     <div class="inputsContainer w-100">
                         <div class="text-start">Dias de funcionamento</div>
                         <div style="position: relative;">
-                            <select id="dias" class="form-select">
-                                <option value="" style="display: none">Selecionar</option>
+                            <select id="dias" class="form-select" data-bs-toggle="collapse" data-bs-target="#diasContainer">
+                                <option style="display: none">Selecionar</option>
                             </select>
-                            <input type="text" v-model="dias">
+                            <input type="hidden" v-model="dias" readonly>
+
 
                             <!-- Dias da semana -->
-                            <div class="shadow">
+                            <div class="card shadow collapse" id="diasContainer">
                                 <div class="bg-light"><strong>Dias da semana</strong></div>
 
                                 <div class="p-1">
