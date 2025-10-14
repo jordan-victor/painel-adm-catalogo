@@ -18,26 +18,26 @@
                     </div>
 
                     <div class="inputsContainer w-100">
-                        <div class="text-start">Razão social</div>
-                        <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome">
+                        <div class="text-start">Razão social<span class="text-danger">*</span></div>
+                        <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome" required>
                     </div>
 
 
                      <div>
-                        <div class="text-start">Descrição</div>
-                        <input type="text" name="descricao" id="descricao" class="form-control" placeholder="Descreva a sua empresa" v-model="dadosForm.descricao">
+                        <div class="text-start">Descrição<span class="text-danger">*</span></div>
+                        <input type="text" name="descricao" id="descricao" class="form-control" placeholder="Descreva a sua empresa" v-model="dadosForm.descricao" required>
                     </div>
 
 
                     <div class="inputsContainer w-100">
-                        <div class="text-start">CNPJ ou CPF</div>
-                        <input type="number" class="form-control" id="cnpj_cpf" v-model="dadosForm.cnpj_cpf">
+                        <div class="text-start">CNPJ ou CPF<span class="text-danger">*</span></div>
+                        <input type="number" class="form-control" id="cnpj_cpf" v-model="dadosForm.cnpj_cpf" required>
                     </div>
 
 
                     <div class="inputsContainer w-100">
-                        <div class="text-start">Administrador(a)</div>
-                        <input type="text" name="admins" class="form-control" id="adm" placeholder="Administrador do painel" v-model="dadosForm.admin">
+                        <div class="text-start">Administrador(a)<span class="text-danger">*</span></div>
+                        <input type="text" name="admins" class="form-control" id="adm" placeholder="Administrador do painel" v-model="dadosForm.admin" required>
                     </div>
                 </fieldset>
 
@@ -49,13 +49,13 @@
                     <div class="text-start bg-light"><strong>Dias e horários</strong></div>
 
                     <div style="position:relative" class="d-flex flex-column">
-                        <div class="text-start">Horários (Início e término)</div>
+                        <div class="text-start">Horários (Início e término)<span class="text-danger">*</span></div>
                         <div class="d-flex gap-1 flex"> 
                             <div class="d-flex flex-column justify-content-end" v-if="horarios_func.length > 0">
                                 <i class="fa-solid fa-caret-down fs-2" data-bs-toggle="collapse" data-bs-target="#horariosContainer"></i>
                             </div>
-                            <input type="time" class="form-control" v-model="horaIni" id="hora_ini">
-                            <input type="time" class="form-control" v-model="horaFim" id="hora_fim">      
+                            <input type="time" class="form-control" v-model="horaIni" id="hora_ini" required>
+                            <input type="time" class="form-control" v-model="horaFim" id="hora_fim" required>      
                             <div class="btn bg-primary text-white" title="Adicionar intervalo de tempo" v-on:click="addHora()">
                                 <i class="fa-solid fa-plus"></i>
                             </div>    
@@ -75,18 +75,16 @@
 
 
                     <div class="inputsContainer w-100">
-                        <div class="text-start">Dias de funcionamento</div>
+                        <div class="text-start">Dias de funcionamento<span class="text-danger">*</span></div>
                         <div style="position: relative;">
                             <select id="dias" class="form-select" data-bs-toggle="collapse" data-bs-target="#diasContainer">
                                 <option style="display: none">Selecionar</option>
                             </select>
-                            <input type="hidden" v-model="dias" readonly>
+                            <input type="hidden" v-model="dias" readonly required>
 
 
                             <!-- Dias da semana -->
                             <div class="card shadow collapse" id="diasContainer">
-                                <div class="bg-light"><strong>Dias da semana</strong></div>
-
                                 <div class="p-1">
                                     <div class="d-flex flex-start gap-1">
                                         <input type="checkbox" class="dia_semana" id="segunda" value="segunda">
@@ -132,8 +130,8 @@
                     <div class="text-start bg-light"><strong>Endereço e contatos</strong></div>
 
                     <div>
-                        <div class="text-start">Endereço</div>
-                        <input type="text" name="endereco" class="form-control" id="endereco" placeholder="Localização da empresa" v-model="dadosForm.endereco">
+                        <div class="text-start">Endereço<span class="text-danger">*</span></div>
+                        <input type="text" name="endereco" class="form-control" id="endereco" placeholder="Localização da empresa" v-model="dadosForm.endereco" required>
                     </div>
 
 
@@ -241,14 +239,15 @@
                 alert("Enviando")
 
                 try {
-                    const empresaRef = ref(db, "empresas");         
+                    const empresaRef = ref(db, `${this.dadosForm.nome}`);         
                     const novoUsuario = push(empresaRef);
 
                     await set(novoUsuario, {
                     nome_empresa: this.dadosForm.nome,
                     horarios: this.dadosForm.horarios,
                     dias_func: this.dadosForm.dias_func,
-                    adm: this.dadosForm.admin,
+                    admin:this.dadosForm.admin,
+                    cnpj_cpf: this.dadosForm.cnpj_cpf,
                     endereco: this.dadosForm.endereco,
                     email: this.dadosForm.email,
                     telefone: this.dadosForm.telefone,
@@ -264,8 +263,9 @@
                     this.dadosForm = {
                         nome:"",
                         horarios:"",
-                        dias_func:"",
                         admin:"",
+                        dias_func:"",
+                        cnpj_cpf:"",
                         senha:"",
                         endereco:"",
                         email:"",

@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <LinksView/>
-  </header>
-
   <main class="container">
     <!-- CARDS -->
     <div class="cards d-flex gap-2 flex-wrap justify-content-center align-items-center align-items-center">
@@ -27,7 +23,7 @@
 
 
       <!--  registro do estabelecimento -->
-      <router-link :to="{name:'cadastro'}">
+      <router-link :to="{name:'catalogo'}">
         <div class="card border-0 shadow p-2">
           <img src="img/menu.png" alt="ícone loja">
           <span>CATÁLOGO</span>
@@ -53,15 +49,9 @@
 
 
 <script>
-// @ is an alias to /src
-import LinksView from '../components/LinksView.vue'
-
 export default {
-  name: 'HomeView',
-  components: {
-    LinksView
+    name: 'HomeView',
   }
-}
 </script>
 
 
