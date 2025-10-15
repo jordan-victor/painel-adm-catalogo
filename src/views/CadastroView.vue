@@ -5,7 +5,7 @@
             <h4 class="mt-3">CADASTRO</h4>
         </header>
 
-        <form class="cadastro" @submit.prevent="addDias(); enviarDados()">
+        <form class="cadastro" @submit.prevent="enviarDados()"> <!--addDias();-->
             <!-- Informações do estabelecimento -->
             <div class="d-flex flex-column gap-3 flex-wrap">
                 <!-- Sobre a empresa -->
@@ -160,6 +160,8 @@
             </div>          
         </form>
     </main>
+
+    <!-- <button @click="testarFirebase()" class="btn btn-secondary mt-2">Testar Firebase</button> -->
 </template>
 
 
@@ -201,6 +203,21 @@
         },
 
         methods: {
+            // async testarFirebase() {
+            //     try {
+            //         const testRef = ref(db, 'teste');
+            //         await set(testRef, { 
+            //             mensagem: 'Teste de conexão',
+            //             timestamp: new Date().toISOString()
+            //         });
+            //         alert('Firebase conectado com sucesso!');
+            //     } catch (error) {
+            //         console.error('Erro no teste:', error);
+            //         alert(`Erro: ${error.message}`);
+            //     }
+            // },
+
+
             // Adicionar horas no array de horas
             addHora(){
                 if(this.horaIni && this.horaFim){
@@ -221,33 +238,48 @@
 
             // Adicionar dias no array de dias
             addDias(){
+                this.diasSubmit = []
+
                 var diasSelecionados = document.querySelectorAll(".dia_semana")
                 diasSelecionados.forEach(dia_selecionado=>{
                     if(dia_selecionado.checked){
                         this.diasSubmit.push(dia_selecionado.value)
-                        this.dias = JSON.stringify(this.diasSubmit)
+                        
                     }
                 })
 
-                this.diasSubmit = []
+                this.dias = JSON.stringify(this.diasSubmit)
+                
             },
 
 
 
             // Enviar formulário
             async enviarDados() {
-                alert("Enviando")
+                this.addDias()
+
+                // Validando dias selecionados
+                if(this.diasSubmit.length === 0){
+                    alert("Selecione pelo menos um dia de funcionamento")
+                    return
+                }
+                // Validando horários selecionados
+                if(this.horarios_func.length === 0){
+                    alert("Adicione pelo menos um horário de funcionamento");
+                    return;
+                }
+
 
                 try {
-                    const empresaRef = ref(db, `${this.dadosForm.nome}`);         
+                    const empresaRef = ref(db, `estabelecimentos`);         
                     const novoUsuario = push(empresaRef);
 
                     await set(novoUsuario, {
                     nome_empresa: this.dadosForm.nome,
-                    horarios: this.dadosForm.horarios,
-                    dias_func: this.dadosForm.dias_func,
+                    horarios: this.horarios_func,
+                    dias_func: this.diasSubmit,
                     admin:this.dadosForm.admin,
-                    cnpj_cpf: this.dadosForm.cnpj_cpf,
+                    cnpj_cpf: String(this.dadosForm.cnpj_cpf),
                     endereco: this.dadosForm.endereco,
                     email: this.dadosForm.email,
                     telefone: this.dadosForm.telefone,
@@ -260,21 +292,31 @@
                     console.log(this.dadosForm)
 
                     // limpa formulário
+                    this.horarios_func = [];
+                    this.diasSubmit = [];
+                    this.dias = null;
+                    this.horaIni = null;
+                    this.horaFim = null;
                     this.dadosForm = {
-                        nome:"",
-                        horarios:"",
-                        admin:"",
-                        dias_func:"",
-                        cnpj_cpf:"",
-                        senha:"",
-                        endereco:"",
-                        email:"",
-                        telefone:"",
-                        redeSocial:"",
-                        descricao:"",
+                        nome: "",
+                        admin: "",
+                        cnpj_cpf: "",
+                        endereco: "",
+                        email: "",
+                        telefone: "",
+                        redeSocial: "",
+                        descricao: "",
                     };
+                    
+
+                    // Limpa checkboxes
+                    document.querySelectorAll('.dia_semana').forEach(checkbox => {
+                        checkbox.checked = false
+                    })
+
                 } catch (error) {
-                    console.error("Erro ao enviar:", error);
+                    console.error("Erro ao enviar:", error)
+                    alert("Erro ao enviar dados")
                 }
             }
         },

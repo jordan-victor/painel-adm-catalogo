@@ -1,12 +1,12 @@
 <script setup>
-    import {ref as vueRef, reactive, onMounted} from 'vue'
-    import { Database, ref, onValue } from 'firebase/database';
+    // import {ref as vueRef, reactive, onMounted} from 'vue'
+    // import { Database, ref, onValue } from 'firebase/database';
 
-    const estabelecimentos = vueRef([])
+    // const estabelecimentos = vueRef([])
 
-    onMounted(()=>{
+    // onMounted(()=>{
         
-    })
+    // })
 </script>
 
 
