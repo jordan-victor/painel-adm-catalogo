@@ -223,8 +223,8 @@
                 if(this.horaIni && this.horaFim){
                     if(this.horaIni < this.horaFim){
                         this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})
-                        this.horaIni = null
-                        this.horaFim = null    
+                        // this.horaIni = null
+                        // this.horaFim = null    
                     }
                     else{
                         alert("O horário de início deve ser menor que o horário de término") 
