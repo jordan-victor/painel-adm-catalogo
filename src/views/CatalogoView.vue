@@ -46,32 +46,71 @@
 
 
   //========== CADASTRAR CATEGORIA ==========
-  const enviarDados = async()=>{
+  const cadastroCategoria = async()=>{
     if(categoria.value){
-        try {
-            const categoriaRef = dbRef(db, `categorias`);         
-            const novaCategoria = push(categoriaRef);
+        const confirmarCategoria = confirm(`Deseja cadastrar a categoria "${categoria.value}"?`)
+        if(confirmarCategoria){
+            try {
+                const categoriaRef = dbRef(db, `categorias`);         
+                const novaCategoria = push(categoriaRef);
 
-            await set(novaCategoria, {
-                categoria: categoria.value,
-                criadoEm: new Date().toISOString()
-            });
+                await set(novaCategoria, {
+                    categoria: categoria.value,
+                    criadoEm: new Date().toISOString()
+                });
 
-            alert("Categoria cadastrada");
+                alert("Categoria cadastrada");
 
-            // limpa formulário
-            categoria.value = null
-        
+                // limpa formulário
+                categoria.value = null
+            
 
-        } catch (error) {
-            console.error("Erro ao enviar:", error)
-            alert("Erro ao enviar dados")
+            } catch (error) {
+                console.error("Erro ao enviar:", error)
+                alert("Erro ao enviar dados")
+            }
         }
     }
     else{
         alert("Informe uma categoria")
     }
   }
+
+
+
+
+
+  //========== CADASTRAR OPÇÃO DO MENÚ ==========
+  let novoProduto = ref({})
+
+  const cadastrarProduto = async()=>{
+    if(novoProduto.value){
+        const confirmarProduto = confirm(`Deseja cadastrar o produto "${novoProduto.value.nome}"?`)
+
+        if(confirmarProduto){
+            try {
+                const produtosRef = dbRef(db, `produtos`);         
+                const NovoProduto = push(produtosRef);
+
+                // novoProduto.criadoEm = new Date().toISOString()
+                await set(NovoProduto, novoProduto.value);
+
+                novoProduto.value = {}
+
+                alert("Produto cadastrado");
+
+            } catch (error) {
+                console.error("Erro ao enviar:", error)
+                alert("Erro ao enviar dados")
+            }
+        }
+    }
+    else{
+        alert("Complete as informações do produto a ser cadastrado")
+    }
+  }
+
+
 
 
 
@@ -113,6 +152,12 @@
 
 
 
+
+
+
+
+
+
 <!-- Template -->
 <template>
     <main class="container-lg">
@@ -121,7 +166,28 @@
             <h4 class="mt-3">CATÁLOGO</h4>
         </header>
 
-        <form class="cadastro">
+        <nav class="d-flex gap-2">
+            <router-link to="/listaprodutos"> Visualizar cardápio</router-link>
+        </nav>
+
+        <form v-on:submit.prevent="cadastroCategoria()" class="mb-4">
+            <!-- Categoria -->
+            <fieldset class="d-flex flex-wrap flex-column gap-2 mb-2 p-2 border">
+                <div class="text-start bg-light"><strong>Cadastrar categoria</strong></div>
+                <div class="inputsContainer w-100">
+                    <div class="text-start">Categoria<span class="text-danger">*</span></div>
+                    <input type="text" class="form-control" id="categoria" placeholder="Nome da categoria" v-model="categoria">
+                </div>
+
+                <div class="d-flex flex-start">
+                    <button class="btn bg-secondary text-white">Cadastrar</button>    
+                </div> 
+            </fieldset>
+        </form>
+
+
+
+        <form class="cadastro" v-on:submit.prevent="cadastrarProduto()">
             <!-- Informações das opções do menú -->
             <div class="d-flex flex-column gap-3 flex-wrap">
                 <!-- Estabelecimento -->
@@ -131,27 +197,11 @@
 
                     <div class="inputsContainer w-100">
                         <div class="text-start">Estabelecimento<span class="text-danger">*</span></div>
-                        <select id="estabelecimento" class="form-select" required>
+                        <select id="estabelecimento" class="form-select" v-model="novoProduto.estabelecimento" required>
                             <option>Selecionar</option>
-                            <option value="{{ estabelecimento.nome_empresa + '-' estabelecimento.endereco }}" v-for="estabelecimento in estabelecimentos">{{ estabelecimento.nome_empresa }} - {{ estabelecimento.endereco }}</option>
+                            <option v-bind:value="estabelecimento.nome_empresa + '-' + estabelecimento.endereco" v-for="estabelecimento in estabelecimentos">{{ estabelecimento.nome_empresa }} - {{ estabelecimento.endereco }}</option>
                         </select>
                     </div>
-                </fieldset>
-
-
-
-
-                <!-- Categoria -->
-                <fieldset class="d-flex flex-wrap flex-column gap-2 mb-2 p-2 border">
-                    <div class="text-start bg-light"><strong>Cadastrar categoria</strong></div>
-                    <div class="inputsContainer w-100">
-                        <div class="text-start">Categoria<span class="text-danger">*</span></div>
-                        <input type="text" class="form-control" id="categoria" placeholder="Nome da categoria" v-model="categoria">
-                    </div>
-
-                    <div class="d-flex flex-start">
-                        <div class="btn bg-secondary text-white" v-on:click="enviarDados()">Cadastrar</div>    
-                    </div> 
                 </fieldset>
 
 
@@ -164,15 +214,15 @@
 
                         <div class="inputsContainer w-100">
                             <div class="text-start">Nome<span class="text-danger">*</span></div>
-                            <input type="text" class="form-control" id="nome_prato" required placeholder="Opção do catálogo">
+                            <input type="text" class="form-control" id="nome_prato" v-model="novoProduto.nome" required placeholder="Opção do catálogo">
                         </div>
 
 
                         <div class="inputsContainer w-100">
                             <div class="text-start">Categoria<span class="text-danger">*</span></div>
-                            <select id="categ_select" class="form-select" required>
+                            <select id="categ_select" class="form-select" v-model="novoProduto.categoria" required>
                                 <option>Selecionar</option>
-                                <option value="{{categoria.categoria}}" v-for="categoria in categorias">{{categoria.categoria}}</option>
+                                <option v-bind:value="categoria.categoria" v-for="categoria in categorias">{{categoria.categoria}}</option>
                             </select>
                         </div>
 
@@ -188,11 +238,11 @@
 
                             <div class="d-flex gap-2 border form-control">
                                 <div class="d-flex gap-1">
-                                    <input type="radio" name="disponivel" id="sim" checked>
+                                    <input type="radio" value="on" v-model="novoProduto.disponivel" checked>
                                     <label for="sim">Sim</label>
                                 </div>
                                 <div class="d-flex gap-1">
-                                    <input type="radio" name="disponivel" id="nao">
+                                    <input type="radio" value="of" name="disponivel" v-model="novoProduto.disponivel">
                                     <label for="nao">Não</label>
                                 </div>
                             </div>
@@ -204,29 +254,26 @@
 
                         <div>
                             <div class="text-start">Descrição<span class="text-danger">*</span></div>
-                            <input type="text" name="descricao" id="descricao" class="form-control" placeholder="Descreva a receita" required>
+                            <input type="text" name="descricao" id="descricao" class="form-control" v-model="novoProduto.descricao" placeholder="Descreva a receita" required>
                         </div>
 
 
                         <div class="inputsContainer w-100">
                             <div class="text-start">Preço<span class="text-danger">*</span></div>
-                            <input type="number" class="form-control" id="preco" placeholder="R$" required>
+                            <input type="number" class="form-control" id="preco" v-model="novoProduto.preco" placeholder="R$" required>
                         </div>
 
 
                         <div class="inputsContainer w-100">
                             <div class="text-start">Tamanho/Porção<span class="text-danger">*</span></div>
-                            <input type="text" class="form-control" id="tamnhoPorcao" placeholder="EX: 500g, 1L, Grande" required>
+                            <input type="text" class="form-control" id="tamnhoPorcao" v-model="novoProduto.proporcao" placeholder="EX: 500g, 1L, Grande" required>
                         </div>
                     </fieldset>
 
                     <div class="d-flex flex-start">
                         <button class="btn bg-secondary text-white">Adicionar</button>    
                     </div>
-                </div>
-
-
-                
+                </div>            
             </div>          
         </form>
     </main>
