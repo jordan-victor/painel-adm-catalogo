@@ -19,7 +19,7 @@
 
                     <div class="inputsContainer w-100">
                         <div class="text-start">Razão social<span class="text-danger">*</span></div>
-                        <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome" required>
+                        <input type="text" name="nome_empresa" class="form-control" id="nome_estabelecimneto" v-model="dadosForm.nome" placeholder="Nome da empresa" required>
                     </div>
 
 
@@ -38,6 +38,15 @@
                     <div class="inputsContainer w-100">
                         <div class="text-start">Administrador(a)<span class="text-danger">*</span></div>
                         <input type="text" name="admins" class="form-control" id="adm" placeholder="Administrador do painel" v-model="dadosForm.admin" required>
+                    </div>
+
+
+                    <div class="inputsContainer w-100">
+                        <div class="text-start">Opção de retirada no local?<span class="text-danger">*</span></div>
+                        <select id="op_retirada" v-model="dadosForm.op_retirada" class="form-select">
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
                     </div>
                 </fieldset>
 
@@ -86,34 +95,12 @@
                             <!-- Dias da semana -->
                             <div class="card shadow collapse" id="diasContainer">
                                 <div class="p-1">
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="segunda" value="segunda">
-                                        <label for="segunda">Segunda</label>
-                                    </div>
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="terca" value="terca">
-                                        <label for="terca">Terça</label>
-                                    </div>
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="quarta" value="quarta">
-                                        <label for="quarta">Quarta</label>
-                                    </div>
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="quinta" value="quinta">
-                                        <label for="quinta">Quinta</label>
-                                    </div>
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="sexta" value="sexta">
-                                        <label for="sexta">Sexta</label>
-                                    </div>
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="sabado" value="sabado">
-                                        <label for="sabado">Sábado</label>
-                                    </div>
-                                    <div class="d-flex flex-start gap-1">
-                                        <input type="checkbox" class="dia_semana" id="domingo" value="domingo">
-                                        <label for="domingo">Domingo</label>
-                                    </div>
+                                    <template v-for="dia in diasSubmit">
+                                        <div class="d-flex flex-start gap-1">
+                                            <input type="checkbox" class="dia_semana" :id="dia.dia" :value="dia.dia">
+                                            <label :for="dia.dia">{{dia.dia}}</label>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
 
@@ -186,7 +173,43 @@
                 horarios_func:[],
                 //Dias
                 dias:null,
-                diasSubmit:[],
+                diasSubmit:[
+                    {
+                        'dia':'Segunda',
+                        'marcado':false,
+                        'horarios':[],
+                    },
+                    { 
+                        'dia': 'Terça', 
+                        'marcado': false,
+                        'horarios': [],
+                    },
+                    { 
+                        'dia': 'Quarta', 
+                        'marcado': false,
+                        'horarios': [],
+                    },
+                    { 
+                        'dia': 'Quinta', 
+                        'marcado': false,
+                        'horarios': [],
+                    },
+                    { 
+                        'dia': 'Sexta', 
+                        'marcado': false,
+                        'horarios': [],
+                    },
+                    { 
+                        'dia': 'Sábado', 
+                        'marcado': false,
+                        'horarios': [],
+                    },
+                    { 
+                        'dia': 'Domingo', 
+                        'marcado': false,
+                        'horarios': [],
+                    }
+                ],
 
                 dadosForm:{
                     nome:"",
@@ -198,6 +221,7 @@
                     telefone:"",
                     redeSocial:"",
                     descricao:"",
+                    op_retirada:"",
                 }
             }
         },
@@ -223,8 +247,12 @@
                 if(this.horaIni && this.horaFim){
                     if(this.horaIni < this.horaFim){
                         this.horarios_func.push({"horaIni":this.horaIni, "horaFim":this.horaFim})
-                        // this.horaIni = null
-                        // this.horaFim = null    
+                        
+                        this.diasSubmit.forEach(dia=>{
+                            dia.horarios = this.horarios_func
+                        })
+
+                        console.log(this.diasSubmit)
                     }
                     else{
                         alert("O horário de início deve ser menor que o horário de término") 
@@ -243,13 +271,15 @@
                 var diasSelecionados = document.querySelectorAll(".dia_semana")
                 diasSelecionados.forEach(dia_selecionado=>{
                     if(dia_selecionado.checked){
-                        this.diasSubmit.push(dia_selecionado.value)
+                        this.diasSubmit.push({
+                            "dia":dia_selecionado.value,
+                            "horarios":this.horarios_func
+                        })
                         
                     }
                 })
-
-                this.dias = JSON.stringify(this.diasSubmit)
-                
+                console.log(this.diasSubmit)
+                this.dias = JSON.stringify(this.diasSubmit)        
             },
 
 
@@ -285,6 +315,7 @@
                     telefone: this.dadosForm.telefone,
                     rede_social: this.dadosForm.redeSocial,
                     descricao: this.dadosForm.descricao,
+                    op_retirada: this.dadosForm.op_retirada,
                     criadoEm: new Date().toISOString()
                     });
 
@@ -306,6 +337,7 @@
                         telefone: "",
                         redeSocial: "",
                         descricao: "",
+                        op_retirada:"",
                     };
                     
 
