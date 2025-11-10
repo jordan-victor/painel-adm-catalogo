@@ -95,10 +95,28 @@
                             <!-- Dias da semana -->
                             <div class="card shadow collapse" id="diasContainer">
                                 <div class="p-1">
-                                    <template v-for="dia in diasSubmit">
-                                        <div class="d-flex flex-start gap-1">
-                                            <input type="checkbox" class="dia_semana" :id="dia.dia" :value="dia.dia">
-                                            <label :for="dia.dia">{{dia.dia}}</label>
+                                    <template v-for="(dia, idia) in diasSubmit">
+                                        <div class="border mb-2">
+                                            <!-- Dias -->
+                                            <div class="d-flex flex-start gap-1">
+                                                <input type="checkbox" class="dia_semana" :id="dia.dia" :value="dia.dia">
+                                                <label :for="dia.dia">{{dia.dia}}</label>
+                                            </div>
+                                            <!-- Horários -->
+                                            <div class="px-3">
+                                                <template v-for="(horario, ihora) in dia.horarios">
+                                                    <div class="mb-1">
+                                                        {{ `${horario.horaIni} - ${horario.horaFim}`}}
+                                                        <div 
+                                                        class="text-white bg-danger" 
+                                                        style="font-size: 12px; width: 30px; border: none; background-color: brown; border-radius: 5px;"
+                                                        v-on:click="removeHora(idia, ihora)"
+                                                        >
+                                                            <i class="fa-solid fa-trash"></i>
+                                                    </div>
+                                                    </div>
+                                                </template>
+                                            </div>
                                         </div>
                                     </template>
                                 </div>
@@ -261,6 +279,14 @@
                 else{
                     alert("Adicione um horário de início e de término")
                 }       
+            },
+
+
+
+            // Remover horarios para cada dia
+            removeHora(idia, ihora){
+                var hora = this.diasSubmit[idia].horarios[ihora]
+                console.log(hora)
             },
 
 
