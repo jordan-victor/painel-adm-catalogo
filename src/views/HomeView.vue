@@ -21,7 +21,7 @@
       <router-link :to="{name:'cadastro'}">
         <div class="card border-0 shadow p-2">
           <img src="img/estabelecimento.png" alt="ícone loja">
-          <span>LOJA</span>
+          <span>ESTABELECIMENTO</span>
         </div>
       </router-link>
 
@@ -165,7 +165,7 @@
 
   /* Estilo dos cards */
   .cards{
-    max-width: 250px;
+    max-width: 400px;
     margin: 0 auto;
   }
   .card{
@@ -174,7 +174,7 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
-    width: 120px;
+    width: 150px;
   }
 
 
