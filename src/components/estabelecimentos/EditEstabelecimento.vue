@@ -1,17 +1,25 @@
 <template>
-    <header class="mb-3 mt-3">     
-        <div>Estabelecimentos cadastrados</div>
-        <hr>         
-    </header>
+    <div class="card">
+        <header class="card-header">     
+            <div>Estabelecimentos cadastrados</div>        
+        </header>
 
-   
-   <div class="cardsEstab d-flex gap-2 flex-wrap">
-        <template v-for="(estabelecimento, i) in estabelecimentos">
-            <div class="card" style="width: 200px;">
-                <h4 class="card-header">{{ estabelecimento.nome_empresa}}</h4>
-                <div><i class="fa-solid fa-house"></i> Endereço:<br> {{ estabelecimento.endereco}}</div>
-            </div>
-        </template>
+    
+        <div class="cardsEstab d-flex gap-2 flex-wrap card-body">
+            <template v-for="(estabelecimento, i) in estabelecimentos">
+                <div class="card cardEstab shadow" style="max-width: 250px; cursor: pointer;">
+                    <h5 class="card-header">{{ estabelecimento.nome_empresa}}</h5>
+                    <div class="card-body">
+                        <div>
+                            <strong><i class="fa-solid fa-house"></i>Endereço:</strong> {{ estabelecimento.endereco}}
+                        </div>
+                        <div>
+                            <strong><i class="fa-solid fa-info"></i>Descrição:</strong> {{ estabelecimento.descricao}}
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
    </div>
 </template>
 
@@ -51,3 +59,15 @@
         listaEstabelecimentos()
     })  
 </script>
+
+
+
+<style scoped>
+    .cardEstab{
+       transition: 0.2s all ease-in-out; 
+    }
+
+    .cardEstab:hover{
+        transform: scale(1.03);
+    }
+</style>
