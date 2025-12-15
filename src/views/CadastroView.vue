@@ -11,7 +11,7 @@
             <div 
             class="bg-light p-2" 
             v-bind:class="{border:showComponent}" 
-            style="border-radius: 8px 8px 0px 0px;"
+            style="border-radius: 8px 8px 0px 0px; cursor: pointer;"
             @click="showComponent = !showComponent"
             >
             Cadastrar
@@ -20,7 +20,7 @@
             <div 
             class="bg-light p-2" 
             v-bind:class="{border:!showComponent}" 
-            style="border-radius: 8px 8px 0px 0px;"
+            style="border-radius: 8px 8px 0px 0px; cursor: pointer;"
             @click="showComponent = !showComponent"
             >
             Editar
@@ -246,37 +246,37 @@
                 dias:null,
                 diasSubmit:[
                     {
-                        'dia':'Segunda',
+                        'dia':'segunda-feira',
                         'marcado':false,
                         'horarios':[],
                     },
                     { 
-                        'dia': 'Terça', 
+                        'dia': 'terça-feira', 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'Quarta', 
+                        'dia': 'quarta-feira', 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'Quinta', 
+                        'dia': 'quinta-feira', 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'Sexta', 
+                        'dia': 'sexta-feira', 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'Sábado', 
+                        'dia': 'sábado', 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'Domingo', 
+                        'dia': 'domingo', 
                         'marcado': false,
                         'horarios': [],
                     }
