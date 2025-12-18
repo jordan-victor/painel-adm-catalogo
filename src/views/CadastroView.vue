@@ -134,7 +134,7 @@
                                             <div class="border-bottom mb-2">
                                                 <!-- Dias -->
                                                 <div class="d-flex flex-start gap-1">
-                                                    <input type="checkbox" class="dia_semana" :id="dia.dia" :value="dia.dia" v-on:change="marcaDia(idia)">
+                                                    <input type="checkbox" class="dia_semana" :id="dia.dia" :value="dia.numDia" v-on:change="marcaDia(idia)">
                                                     <label :for="dia.dia">{{dia.dia}}</label>
                                                 </div>
                                                 <!-- Horários -->
@@ -247,36 +247,43 @@
                 diasSubmit:[
                     {
                         'dia':'segunda-feira',
+                        'numDia': 1,
                         'marcado':false,
                         'horarios':[],
                     },
                     { 
-                        'dia': 'terça-feira', 
+                        'dia': 'terça-feira',
+                        'numDia': 2, 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'quarta-feira', 
+                        'dia': 'quarta-feira',
+                        'numDia': 3, 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'quinta-feira', 
+                        'dia': 'quinta-feira',
+                        'numDia': 4, 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'sexta-feira', 
+                        'dia': 'sexta-feira',
+                        'numDia': 5, 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'sábado', 
+                        'dia': 'sábado',
+                        'numDia': 6, 
                         'marcado': false,
                         'horarios': [],
                     },
                     { 
-                        'dia': 'domingo', 
+                        'dia': 'domingo',
+                        'numDia': 0, 
                         'marcado': false,
                         'horarios': [],
                     }

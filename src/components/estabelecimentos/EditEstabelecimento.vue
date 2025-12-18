@@ -12,7 +12,15 @@
                     <div class="card cardEstab h-100 d-flex flex-column justify-content-between" style="cursor: pointer;">
                         <div>
                             <h5 class="card-header">{{ estabelecimento.nome_empresa}}</h5>
-                            <div class="card-body">
+
+                            <div class="card-body"> 
+                                <div
+                                class="text-center w-100" 
+                                v-bind:class="estabelecimento.aberto ? 'text-success' : 'text-danger'"
+                                >
+                                    {{ estabelecimento.aberto ? 'Aberto' : 'Fechado' }}
+                                </div>
+                                
                                 <div>
                                     <strong>Endereço:</strong> {{ estabelecimento.endereco}}
                                 </div>
@@ -32,8 +40,8 @@
             </template>
         </div>
         
-        <div v-else class="w-100">
-            <span class="text-center">Sem estabelecimentos cadastrados</span>
+        <div v-else class="w-100 text-center">
+            Sem estabelecimentos cadastrados
         </div>
    </div>
 </template>
@@ -60,7 +68,7 @@
         'sábado'
     ]
 
-    let diaHj = ref(new Date().toLocaleDateString(undefined, {weekday:'long'}))
+    let diaHj = ref(new Date().toLocaleDateString('pt-BR', {weekday:'long'}))
    
 
 
@@ -81,21 +89,70 @@
 
 
                 //=====VERIFICANDO SE O ESTABELECIMENTO ESTÁ ABERTO OU NÃO NO DIA ATUAL=====
-                // atualiza o dia de hoje a cada uma hora
+                // Dia da semana de hoje
+                const agora = new Date()
+
+                let diaSemHoje = new Date().getDay()
+                if (diaSemHoje === 0) {
+                    diaSemHoje = "domingo"
+                } else if (diaSemHoje === 1) {
+                    diaSemHoje = "segunda-feira"
+                } else if (diaSemHoje === 2) {
+                    diaSemHoje = "terça-feira"
+                } else if (diaSemHoje === 3) {
+                    diaSemHoje = "quarta-feira"
+                } else if (diaSemHoje === 4) {
+                    diaSemHoje = "quinta-feira"
+                } else if (diaSemHoje === 5) {
+                    diaSemHoje = "sexta-feira"
+                } else if (diaSemHoje === 6) {
+                    diaSemHoje = "sábado"
+                }
+
+                let horaAgora = agora.getHours() * 60 + agora.getMinutes()
                 
-                    let diaSemHoje = new Date().toLocaleDateString(undefined, {weekday:'long'})
-                    
-                    
-                    estabelecimentos.value.forEach(estabelecimento=>{
-                        estabelecimento.dias_func.forEach(dia_func=>{
-                            if(dia_func.dia == diaSemHoje){
-                                // Comparando hora´rio agora com os horários de funcionamento
-                                dia_func.horarios.forEach(horario=>{
-                                    console.log(new Date(horario.horaIni))
-                                })
-                            }
-                        })
+                // Comparando horários do dia de hoje para verificar se o etsbelecimento está aberto ou não
+                estabelecimentos.value.forEach(estabelecimento=>{
+                    var aberto = false
+
+                    estabelecimento.dias_func.forEach(dia_func=>{
+                        // Se o dia da semana for igual a uns dos dias da semana do estabelecimento
+                        if(dia_func.dia == diaSemHoje){
+                            var numIntervalo = dia_func.horarios.length - 1
+                            
+                            // Comparando hora´rio agora com os horários de funcionamento
+                            dia_func.horarios.forEach((horario, i)=>{
+                                // Hora e minuto (início e fim) do estabelecimento hoje
+                                var horaIni = Number(horario.horaIni.split(':')[0])*60 + Number(horario.horaIni.split(':')[1])
+                                var horaFim = Number(horario.horaFim.split(':')[0])*60 + Number(horario.horaFim.split(':')[1])
+                               
+                                // Se existir um próximo intervalo de horários
+                                if(dia_func.horarios[i+1]){
+                                    // Hora inicial em minutos do próximo intervalo
+                                    var horaIniProxIntervalo = Number(dia_func.horarios[i+1].horaIni.split(':')[0])*60 + Number(dia_func.horarios[i+1].horaIni.split(':')[1])
+                                     
+                                    // Verificando se o horário agora está fora de algum intervalo de horários
+                                    if(
+                                        horaAgora > horaFim && 
+                                        horaAgora < horaIniProxIntervalo 
+                                    ){
+                                        aberto = false
+                                        console.log("fechado")
+                                    }
+                                }
+                                else{
+                                    if(horaAgora >= horaIni && horaAgora <= horaFim){
+                                        aberto = true
+                                        console.log("aberto")
+                                    }    
+                                }                                           
+                            })
+                        }
                     })
+
+                    console.log(aberto)
+                    estabelecimento.aberto = aberto
+                })
                    
                 
                 
@@ -118,7 +175,7 @@
                         minute:'numeric'
                     }
 
-                    var horaAtual = ref(new Date().toLocaleTimeString(undefined, horaLocal)) 
+                    var horaAtual = ref(new Date().toLocaleTimeString('pt-BR', horaLocal)) 
                 }, 1000)
             }
             else{
