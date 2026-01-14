@@ -361,7 +361,7 @@
     }
 
     .cardEstab:hover{
-        transform: scale(1.03);
+        transform: scale(1.02);
         box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.068);
     }
 </style>

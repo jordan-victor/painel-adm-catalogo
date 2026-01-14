@@ -76,10 +76,76 @@
                                 <option value="nao">Não</option>
                             </select>
                         </div>
+
+                        <div class="inputsContainer w-100">
+                            <div class="text-start">Tipos de pagamento<span class="text-danger">*</span></div>
+                            <select id="tp_pag" v-model="dadosForm.tp_pag" class="form-select" data-bs-toggle="collapse" data-bs-target="#tp_pagamentos">
+                                <option style="display: none">Selecionar</option>
+                            </select>
+
+                            <div class="border d-flex flex-column gap-1 p-1 collapse" id="tp_pagamentos">
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="din" value="Dinheiro" v-on:click="addTpPag()">
+                                    <label for="din">Dinheiro</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="pix" value="Pix" v-on:click="addTpPag()">
+                                    <label for="pix">Pix</label>               
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="debito" value="Cartão de Débito" v-on:click="addTpPag()">
+                                    <label for="debito">Cartão de Débito</label>                                  
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="credito" value="Cartão de Crédito" v-on:click="addTpPag()">
+                                    <label for="credito">Cartão de Crédito</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="boleto" value="Boleto" v-on:click="addTpPag()">
+                                    <label for="boleto">Boleto</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="cb" value="Cartão-benefício" v-on:click="addTpPag()">
+                                    <label for="cb">Cartão-benefício</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="cd" value="Carteiras digitais" v-on:click="addTpPag()">
+                                    <label for="cd">Carteiras digitais</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="wp" value="WhatsApp Pay" v-on:click="addTpPag()">
+                                    <label for="wp">WhatsApp Pay</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="tb" v-on:click="addTpPag()" value="Transferência bancária">
+                                    <label for="tb">Transferência bancária</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="lp" v-on:click="addTpPag()" value="Link de pagamento">
+                                    <label for="lp">Link de pagamento</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="cdr" v-on:click="addTpPag()" value="Crediário">
+                                    <label for="cdr">Crediário</label>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <input type="checkbox" class="tipo_pg" id="vp" v-on:click="addTpPag()" value="Vale-presente">
+                                    <label for="vp">Vale-presente</label>
+                                </div>
+
+                                <div class="d-flex gap-1">
+                                    <input type="text" class="form-control tipo_pg" placeholder="Outro tipo">
+                                    <div class="btn bg-secondary text-white" v-on:click="addTpPag()">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>    
+                                </div>
+                                
+                            </div>
+                        </div>
                     </fieldset>
 
 
-
+                    
 
                     <!-- Dias e horários -->
                     <fieldset class="d-flex flex-wrap flex-column gap-2 mb-2 p-2 border">
@@ -235,6 +301,7 @@
 
         data() {
             return {
+                tpPgAdd:"",
                 // Exibir módulos
                 showComponent: true,
                 //Horários
@@ -300,6 +367,7 @@
                     redeSocial:"",
                     descricao:"",
                     op_retirada:"",
+                    tp_pag:""
                 }
             }
         },
@@ -376,6 +444,23 @@
 
 
 
+
+            // Adicionar tipos de pagamento
+            addTpPag(){
+                var tpAdicionados = []
+                var tiposPg = document.querySelectorAll(".tipo_pg")
+
+                tiposPg.forEach(tpPg=>{
+                    if(tpPg.checked){
+                        tpAdicionados.push(tpPg.value)
+                    }
+                })
+                
+                this.dadosForm.tp_pag = tpAdicionados
+                console.log(this.dadosForm.tp_pag)
+            },
+
+    
             // Enviar formulário
             async enviarDados() {
                 // this.addDias()
@@ -418,6 +503,7 @@
                     rede_social: this.dadosForm.redeSocial,
                     descricao: this.dadosForm.descricao,
                     op_retirada: this.dadosForm.op_retirada,
+                    tp_pag:this.dadosForm.tp_pag,
                     criadoEm: new Date().toISOString()
                     });
 
@@ -440,6 +526,7 @@
                         redeSocial: "",
                         descricao: "",
                         op_retirada:"",
+                        tp_pag:""
                     };
                     
 
