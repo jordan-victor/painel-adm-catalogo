@@ -134,12 +134,21 @@
                                 </div>
 
                                 <div class="d-flex gap-1">
-                                    <input type="text" class="form-control tipo_pg" placeholder="Outro tipo">
-                                    <div class="btn bg-secondary text-white" v-on:click="addTpPag()">
+                                    <input type="text" class="form-control tipo_pg" placeholder="Outro tipo" id="inputOtrTp" v-model="inputTpPg">
+                                    <div class="btn bg-secondary text-white" v-on:click="addTp()" >
                                         <i class="fa-solid fa-plus"></i>
                                     </div>    
                                 </div>
-                                
+
+                                <!-- Modos de pagamento adicionados pelo input acima -->
+                                <div class="d-flex flex-column gap-1">
+                                    <div v-for="(tp, i) in inputAddTpPag" v-bind:key="i">
+                                        <div class="d-flex gap-1">
+                                            <input type="checkbox" :id="i" checked v-on:click.stop="inputAddTpPag = inputAddTpPag.filter(tpPg=>tpPg !== tp)">
+                                            <label :for="i">{{ tp }}</label>
+                                        </div>
+                                    </div>    
+                                </div>         
                             </div>
                         </div>
                     </fieldset>
@@ -356,6 +365,9 @@
                     }
                 ],
 
+                inputAddTpPag:[],
+                inputTpPg:"",
+
                 dadosForm:{
                     nome:"",
                     horarios:"",
@@ -449,16 +461,35 @@
             addTpPag(){
                 var tpAdicionados = []
                 var tiposPg = document.querySelectorAll(".tipo_pg")
-
+                              
                 tiposPg.forEach(tpPg=>{
                     if(tpPg.checked){
                         tpAdicionados.push(tpPg.value)
                     }
                 })
+
+                if(this.inputAddTpPag.length > 0){
+                    tpAdicionados.push(...this.inputAddTpPag)
+                }
+        
+                if(tpAdicionados.length > 0){
+                    this.dadosForm.tp_pag = tpAdicionados    
+                }
                 
-                this.dadosForm.tp_pag = tpAdicionados
                 console.log(this.dadosForm.tp_pag)
             },
+
+            addTp(){
+                if(this.inputTpPg){
+                    this.inputAddTpPag.push(this.inputTpPg)
+                    this.inputTpPg = ""
+                    this.addTpPag()    
+                }
+                // console.log(this.inputAddTpPag)
+            },
+
+
+
 
     
             // Enviar formulário
